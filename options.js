@@ -112,16 +112,51 @@ const renderCards = (sitesToRender, selectedUrl) => {
     card.draggable = true;
 
     card.innerHTML = `
-      <img src="${site.icon}" alt="${site.title} icon" onerror="this.src='images/icon48.png';">
+      <img src="${site.icon}" alt="${
+      site.title
+    } icon" onerror="this.src='images/icon48.png';">
       <h3>${site.title}</h3>
       <p>${site.description}</p>
+      ${
+        site.id.startsWith("custom-")
+          ? `
+        <div class="card-actions">
+          <button class="edit-btn" title="Edit this site">Edit</button>
+          <button class="delete-btn" title="Delete this site">Delete</button>
+        </div>
+      `
+          : ""
+      }
     `;
 
-    card.addEventListener("click", () => {
+    card.addEventListener("click", (e) => {
+      // Don't trigger card selection if clicking on action buttons
+      if (
+        e.target.classList.contains("edit-btn") ||
+        e.target.classList.contains("delete-btn")
+      ) {
+        return;
+      }
       chrome.storage.sync.set({ customUrl: site.url });
       // Re-render to update the 'selected' state visually
       initialize();
     });
+
+    // Add event listeners for edit and delete buttons (only for custom sites)
+    if (site.id.startsWith("custom-")) {
+      const editBtn = card.querySelector(".edit-btn");
+      const deleteBtn = card.querySelector(".delete-btn");
+
+      editBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openEditModal(site);
+      });
+
+      deleteBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        deleteSite(site.id);
+      });
+    }
     // Drag and Drop Listeners
     card.addEventListener("dragstart", (e) => {
       draggedItem = e.target;
@@ -218,46 +253,147 @@ const initialize = () => {
 const openModal = () => modalOverlay.classList.remove("hidden");
 const closeModal = () => modalOverlay.classList.add("hidden");
 
+// Variable to track if we're editing an existing site
+let editingSite = null;
+
+const openEditModal = (site) => {
+  editingSite = site;
+
+  // Populate the form with existing site data
+  document.getElementById("new-title").value = site.title;
+  document.getElementById("new-url").value = site.url;
+  document.getElementById("new-icon").value = site.icon;
+  document.getElementById("new-desc").value = site.description;
+
+  // Change modal title to indicate editing
+  const modalTitle = document.querySelector("#modal-overlay h2");
+  if (modalTitle) {
+    modalTitle.textContent = "Edit Website";
+  }
+
+  openModal();
+};
+
+const deleteSite = (siteId) => {
+  if (confirm("Are you sure you want to delete this website?")) {
+    chrome.storage.sync.get({ userWebsites: [], siteOrder: [] }, (data) => {
+      // Remove from userWebsites array
+      const updatedUserSites = data.userWebsites.filter(
+        (site) => site.id !== siteId
+      );
+
+      // Remove from siteOrder array
+      const updatedSiteOrder = data.siteOrder.filter((id) => id !== siteId);
+
+      // Save updated data
+      chrome.storage.sync.set(
+        {
+          userWebsites: updatedUserSites,
+          siteOrder: updatedSiteOrder,
+        },
+        () => {
+          initialize(); // Refresh the display
+        }
+      );
+    });
+  }
+};
+
 const handleFormSubmit = (event) => {
   event.preventDefault(); // Prevent the form from reloading the page
 
-  const newSite = {
-    // Use timestamp for a unique-enough ID for this use case
-    id: `custom-${Date.now()}`,
+  const siteData = {
     title: document.getElementById("new-title").value,
     url: document.getElementById("new-url").value,
     icon: document.getElementById("new-icon").value,
     description: document.getElementById("new-desc").value,
   };
 
-  // 1. Get the current list of user websites and site order.
-  chrome.storage.sync.get({ userWebsites: [], siteOrder: [] }, (data) => {
-    const updatedUserSites = [...data.userWebsites, newSite];
-    const updatedSiteOrder = [...data.siteOrder, newSite.id];
+  if (editingSite) {
+    // Editing existing site
+    const updatedSite = {
+      ...siteData,
+      id: editingSite.id, // Keep the same ID
+    };
 
-    // 2. Save the new, updated list and order back to storage.
-    chrome.storage.sync.set(
-      {
-        userWebsites: updatedUserSites,
-        siteOrder: updatedSiteOrder,
-      },
-      () => {
-        // 3. Re-initialize the page to show the new card.
+    chrome.storage.sync.get({ userWebsites: [], siteOrder: [] }, (data) => {
+      // Update the site in userWebsites array
+      const updatedUserSites = data.userWebsites.map((site) =>
+        site.id === editingSite.id ? updatedSite : site
+      );
+
+      chrome.storage.sync.set({ userWebsites: updatedUserSites }, () => {
+        editingSite = null; // Reset editing state
+
+        // Reset modal title
+        const modalTitle = document.querySelector("#modal-overlay h2");
+        if (modalTitle) {
+          modalTitle.textContent = "Add New Website";
+        }
+
         initialize();
         closeModal();
-        addSiteForm.reset(); // Clear the form fields
-      }
-    );
-  });
+        addSiteForm.reset();
+      });
+    });
+  } else {
+    // Adding new site
+    const newSite = {
+      ...siteData,
+      id: `custom-${Date.now()}`, // Generate new ID
+    };
+
+    chrome.storage.sync.get({ userWebsites: [], siteOrder: [] }, (data) => {
+      const updatedUserSites = [...data.userWebsites, newSite];
+      const updatedSiteOrder = [...data.siteOrder, newSite.id];
+
+      chrome.storage.sync.set(
+        {
+          userWebsites: updatedUserSites,
+          siteOrder: updatedSiteOrder,
+        },
+        () => {
+          initialize();
+          closeModal();
+          addSiteForm.reset();
+        }
+      );
+    });
+  }
 };
 
 // 5. EVENT LISTENERS
-addNewButton.addEventListener("click", openModal);
-cancelButton.addEventListener("click", closeModal);
+addNewButton.addEventListener("click", () => {
+  editingSite = null; // Reset editing state
+  // Reset modal title
+  const modalTitle = document.querySelector("#modal-overlay h2");
+  if (modalTitle) {
+    modalTitle.textContent = "Add New Website";
+  }
+  openModal();
+});
+
+cancelButton.addEventListener("click", () => {
+  editingSite = null; // Reset editing state
+  // Reset modal title
+  const modalTitle = document.querySelector("#modal-overlay h2");
+  if (modalTitle) {
+    modalTitle.textContent = "Add New Website";
+  }
+  closeModal();
+});
+
 addSiteForm.addEventListener("submit", handleFormSubmit);
+
 // Optional: Close modal if user clicks on the dark overlay
 modalOverlay.addEventListener("click", (event) => {
   if (event.target === modalOverlay) {
+    editingSite = null; // Reset editing state
+    // Reset modal title
+    const modalTitle = document.querySelector("#modal-overlay h2");
+    if (modalTitle) {
+      modalTitle.textContent = "Add New Website";
+    }
     closeModal();
   }
 });
