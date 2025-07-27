@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Quick Window Opener",
+  "version": "1.0",
+  "description": "Opens a specified URL in a new window with one click.",
+  "permissions": ["windows", "storage"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "96": "images/icon96.png"
+    },
+    "default_title": "Open My Window"
+  },
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon96.png"
+  },
+  "options_page": "options.html"
+}
