@@ -3,11 +3,32 @@
 // This makes it easy to add or remove websites in the future.
 const websites = [
   {
+    id: "roadmap",
+    title: "Roadmap",
+    description: "Your roadmap to learning.",
+    url: "https://roadmap.sh",
+    icon: "https://roadmap.sh/favicon.ico",
+  },
+  {
     id: "github",
     title: "GitHub",
     description: "Code hosting and collaboration.",
     url: "https://github.com",
     icon: "https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png",
+  },
+  {
+    id: "coursera",
+    title: "Coursera",
+    description: "Learn from the best.",
+    url: "https://www.coursera.org",
+    icon: "https://www.coursera.org/favicon.ico",
+  },
+  {
+    id: "freecodecamp",
+    title: "freeCodeCamp",
+    description: "Learn to code for free.",
+    url: "https://www.freecodecamp.org",
+    icon: "https://global.discourse-cdn.com/freecodecamp/optimized/3X/2/0/206c254cf9e405bcddf6caea7f882dca146dcd3c_2_32x32.png",
   },
   {
     id: "wikipedia",
@@ -30,26 +51,13 @@ const websites = [
     url: "https://www.google.com",
     icon: "https://www.google.com/favicon.ico",
   },
-  {
-    id: "roadmap",
-    title: "Roadmap.sh",
-    description: "Your roadmap to learning.",
-    url: "https://roadmap.sh",
-    icon: "https://roadmap.sh/favicon.ico",
-  },
+  ,
   {
     id: "mdn",
     title: "MDN Web Docs",
     description: "Documentation for web developers.",
     url: "https://developer.mozilla.org",
     icon: "https://developer.mozilla.org/favicon.ico",
-  },
-  {
-    id: "freecodecamp",
-    title: "freeCodeCamp",
-    description: "Learn to code for free.",
-    url: "https://www.freecodecamp.org",
-    icon: "https://global.discourse-cdn.com/freecodecamp/optimized/3X/2/0/206c254cf9e405bcddf6caea7f882dca146dcd3c_2_32x32.png",
   },
 ];
 
