@@ -3,10 +3,11 @@
   <head>
     <title>Quick Window Opener Settings</title>
     <style>
+      /* --- Existing styles from before --- */
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           sans-serif;
-        padding: 10px 20px;
+        padding: 10px 20px 80px; /* Add padding to bottom for FAB */
         background-color: #f4f4f9;
         min-width: 500px;
       }
@@ -14,14 +15,11 @@
         font-size: 1.5em;
         color: #333;
       }
-      /* Grid Container */
       #grid-container {
         display: grid;
-        /* This creates a responsive grid that adds more columns as space allows */
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 20px;
       }
-      /* Card Base Style */
       .card {
         border: 2px solid #ddd;
         border-radius: 8px;
@@ -30,13 +28,11 @@
         background-color: white;
         cursor: pointer;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
-        position: relative;
       }
       .card:hover {
         transform: translateY(-5px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
       }
-      /* Selected Card Style */
       .card.selected {
         border-color: #4285f4;
         background-color: #e8f0fe;
@@ -46,24 +42,128 @@
         height: 48px;
         margin-bottom: 10px;
       }
-      .card h3 {
+      .card h3,
+      .card p {
         margin: 0 0 5px 0;
-        font-size: 1em;
         color: #202124;
       }
-      .card p {
-        margin: 0;
-        font-size: 0.8em;
-        color: #5f6368;
+
+      /* --- NEW STYLES for Modal and FAB --- */
+      .hidden {
+        display: none !important;
+      }
+
+      #add-new-button {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background-color: #4285f4;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 36px;
+        line-height: 60px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+      #add-new-button:hover {
+        transform: scale(1.05);
+      }
+
+      #modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #modal-content {
+        background: white;
+        padding: 20px 30px;
+        border-radius: 8px;
+        width: 400px;
+      }
+
+      #add-site-form input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      #form-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      #form-buttons button {
+        padding: 10px 20px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+      }
+      #form-buttons button[type="submit"] {
+        background-color: #4285f4;
+        color: white;
       }
     </style>
   </head>
   <body>
     <h1>Select a Website</h1>
-    <p>Click a card to set it as the target for the extension icon.</p>
+    <p>Click a card to set it. Add your own with the '+' button.</p>
 
-    <div id="grid-container">
-      <!-- Cards will be dynamically inserted here by options.js -->
+    <div id="grid-container"></div>
+
+    <!-- New Floating Action Button -->
+    <button id="add-new-button">+</button>
+
+    <!-- New Modal Form (hidden by default) -->
+    <div id="modal-overlay" class="hidden">
+      <div id="modal-content">
+        <h2>Add Custom Website</h2>
+        <form id="add-site-form">
+          <input
+            id="new-title"
+            type="text"
+            placeholder="Title (e.g., 'My Portfolio')"
+            required
+          />
+          <input
+            id="new-url"
+            type="url"
+            placeholder="Full URL (e.g., 'https://ahmed.dev')"
+            required
+          />
+          <input
+            id="new-icon"
+            type="url"
+            placeholder="URL to an icon image"
+            required
+          />
+          <input
+            id="new-desc"
+            type="text"
+            placeholder="Short Description"
+            required
+          />
+          <div id="form-buttons">
+            <button type="button" id="cancel-button">Cancel</button>
+            <button type="submit">Save</button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <script src="options.js"></script>
