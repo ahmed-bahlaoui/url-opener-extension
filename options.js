@@ -8,13 +8,41 @@ const defaultWebsites = [
     icon: "https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png",
   },
   {
+    id: "roadmap",
+    title: "Roadmap.sh",
+    description:
+      "Community driven roadmaps, articles and guides for developers to grow in their career.",
+    url: "https://roadmap.sh",
+    icon: "https://roadmap.sh/favicon.ico",
+  },
+  {
     id: "wikipedia",
     title: "Wikipedia",
     description: "The Free Encyclopedia.",
     url: "https://www.wikipedia.org",
     icon: "https://www.wikipedia.org/static/favicon/wikipedia.ico",
   },
-  // ... other default sites
+  {
+    id: "facebook",
+    title: "Facebook",
+    description: "Connect with friends and the world around you.",
+    url: "https://www.facebook.com",
+    icon: "https://www.facebook.com/favicon.ico",
+  },
+  {
+    id: "twitter",
+    title: "Twitter",
+    description: "See what's happening in the world right now.",
+    url: "https://x.com",
+    icon: "https://abs.twimg.com/favicons/twitter.3.ico",
+  },
+  {
+    id: "youtube",
+    title: "YouTube",
+    description: "Watch, upload, and share videos.",
+    url: "https://www.youtube.com",
+    icon: "https://www.youtube.com/s/desktop/ad18d4a4/img/logos/favicon_96x96.png",
+  },
 ];
 
 // 2. DOM ELEMENT SELECTORS
