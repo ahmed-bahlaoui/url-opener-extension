@@ -9,16 +9,16 @@
   },
   "action": {
     "default_icon": {
-      "16": "images/icon16.png",
-      "48": "images/icon48.png",
-      "96": "images/icon96.png"
+      "8": "images/favicon8.png",
+      "32": "images/favicon32.png",
+      "96": "images/favicon96.png"
     },
     "default_title": "Open My Window"
   },
   "icons": {
-    "16": "images/icon16.png",
-    "48": "images/icon48.png",
-    "128": "images/icon96.png"
+    "8": "images/favicon8.png",
+    "32": "images/favicon32.png",
+    "96": "images/favicon96.png"
   },
   "options_page": "options.html"
 }
