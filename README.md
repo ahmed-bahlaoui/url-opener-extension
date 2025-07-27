@@ -51,8 +51,8 @@ Hit the **blue “+”**, drop in the URL, icon and a short blurb—saved instan
 
 ## 🗺️ Roadmap
 
-- [ ] Delete and edit custom sites
-- [ ] Drag-to-reorder cards
+- [x] Delete and edit custom sites
+- [x] Drag-to-reorder cards
 - [ ] Global keyboard shortcut
 
 ---
