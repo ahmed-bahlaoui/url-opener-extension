@@ -1,6 +1,6 @@
 <!-- Quick Window Opener 🚀 -->
 
-![demo](https://github.com/ahmed-bahlaoui/url-opener-extension/raw/main/images/demo.png)
+![demo](./images/demo.png)
 
 # Quick Window Opener
 
